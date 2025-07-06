@@ -5,7 +5,8 @@ edition = "2024"
 
 [dependencies]
 avian2d = "0.3.1"
-bevy = { version = "0.16", default-features = false, features = ["bevy_asset", "bevy_audio", "bevy_core_pipeline", "bevy_render", "bevy_sprite", "bevy_state", "bevy_text", "bevy_ui", "bevy_winit", "default_font", "multi_threaded", "bevy_gizmos", "wav", "png", "x11", "wayland", "webgl2"] }
+bevy = { version = "0.16", default-features = false, features = ["bevy_asset", "bevy_audio", "bevy_core_pipeline", "bevy_render", "bevy_sprite", "bevy_state", "bevy_text", "bevy_ui", "bevy_winit", "default_font", "multi_threaded", "bevy_gizmos", "wav", "png", "x11", "wayland", "webgl2", "dynamic_linking"] }
+bevy_dylib = "0.16.1"
 bevy_enhanced_input = "0.14.1"
 bevy_enoki = "0.4.0"
 rand = "0.8"
