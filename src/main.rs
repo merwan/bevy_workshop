@@ -9,11 +9,12 @@ fn main() {
             }),
             ..default()
         }))
-        .add_systems(Startup, display_title)
+        .add_systems(Startup, display_splash_screen)
+        .add_systems(Update, remove_splash_screen)
         .run();
 }
 
-fn display_title(mut commands: Commands) {
+fn display_splash_screen(mut commands: Commands) {
     commands.spawn(Camera2d);
 
     commands.spawn((
@@ -42,4 +43,22 @@ fn display_title(mut commands: Commands) {
             )
         ],
     ));
+
+    commands.insert_resource(SplashScreenTimer(Timer::from_seconds(2.0, TimerMode::Once)));
+}
+
+#[derive(Resource)]
+struct SplashScreenTimer(Timer);
+
+fn remove_splash_screen(
+    time: Res<Time>,
+    mut timer: ResMut<SplashScreenTimer>,
+    mut commands: Commands,
+    nodes: Query<Entity, With<Node>>,
+) {
+    if timer.0.tick(time.delta()).just_finished() {
+        for entity in &nodes {
+            commands.entity(entity).despawn();
+        }
+    }
 }
