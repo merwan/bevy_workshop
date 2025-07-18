@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+mod splash;
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
@@ -11,8 +13,7 @@ fn main() {
         }))
         .init_state::<GameState>()
         .enable_state_scoped_entities::<GameState>()
-        .add_systems(OnEnter(GameState::Splash), display_splash_screen)
-        .add_systems(Update, switch_to_menu.run_if(in_state(GameState::Splash)))
+        .add_plugins(splash::splash_plugin)
         .run();
 }
 
@@ -21,51 +22,4 @@ enum GameState {
     #[default]
     Splash,
     StartMenu,
-}
-
-#[derive(Resource)]
-struct SplashScreenTimer(Timer);
-
-fn display_splash_screen(mut commands: Commands) {
-    commands.spawn(Camera2d);
-
-    commands.spawn((
-        Node {
-            width: Val::Percent(100.0),
-            height: Val::Percent(100.0),
-            align_items: AlignItems::Center,
-            justify_content: JustifyContent::Center,
-            flex_direction: FlexDirection::Column,
-            ..default()
-        },
-        children![
-            (
-                Text::new("Bevy Workshop"),
-                TextFont {
-                    font_size: 130.0,
-                    ..default()
-                }
-            ),
-            (
-                Text::new("Rust Week 2025"),
-                TextFont {
-                    font_size: 100.0,
-                    ..default()
-                }
-            )
-        ],
-        StateScoped(GameState::Splash),
-    ));
-
-    commands.insert_resource(SplashScreenTimer(Timer::from_seconds(2.0, TimerMode::Once)));
-}
-
-fn switch_to_menu(
-    mut next: ResMut<NextState<GameState>>,
-    mut timer: ResMut<SplashScreenTimer>,
-    time: Res<Time>,
-) {
-    if timer.0.tick(time.delta()).just_finished() {
-        next.set(GameState::StartMenu);
-    }
 }
