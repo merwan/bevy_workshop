@@ -9,8 +9,6 @@ pub fn start_plugin(app: &mut App) {
             switch_to_play.run_if(in_state(GameState::StartMenu)),
         );
 }
-#[derive(Resource)]
-struct SplashScreenTimer(Timer);
 
 fn display_start_screen(mut commands: Commands) {
     commands.spawn((
@@ -31,16 +29,10 @@ fn display_start_screen(mut commands: Commands) {
         )],
         StateScoped(GameState::StartMenu),
     ));
-
-    commands.insert_resource(SplashScreenTimer(Timer::from_seconds(2.0, TimerMode::Once)));
 }
 
-fn switch_to_play(
-    mut next: ResMut<NextState<GameState>>,
-    mut timer: ResMut<SplashScreenTimer>,
-    time: Res<Time>,
-) {
-    if timer.0.tick(time.delta()).just_finished() {
-        next.set(GameState::Play);
+fn switch_to_play(mut next: ResMut<NextState<GameState>>, keyboard: Res<ButtonInput<KeyCode>>) {
+    if keyboard.get_just_pressed().next().is_some() {
+        next.set(GameState::Game);
     }
 }

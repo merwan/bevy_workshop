@@ -24,5 +24,5 @@ enum GameState {
     #[default]
     Splash,
     StartMenu,
-    Play,
+    Game,
 }
