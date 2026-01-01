@@ -1,4 +1,4 @@
-use crate::GameState;
+use crate::{GameAssets, GameState};
 use bevy::prelude::*;
 
 pub fn game_plugin(app: &mut App) {
@@ -15,9 +15,9 @@ struct Player;
 #[derive(Component)]
 struct Asteroid;
 
-fn display_level(mut commands: Commands) {
+fn display_level(mut commands: Commands, game_assets: Res<GameAssets>) {
     commands.spawn((
-        Sprite::from_color(Color::linear_rgb(1.0, 0.0, 0.0), Vec2::new(50.0, 80.0)),
+        Sprite::from_image(game_assets.player_ship.clone()),
         Player,
         StateScoped(GameState::Game),
     ));
