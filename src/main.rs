@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+mod game;
 mod splash;
 mod start;
 
@@ -16,6 +17,7 @@ fn main() {
         .enable_state_scoped_entities::<GameState>()
         .add_plugins(splash::splash_plugin)
         .add_plugins(start::start_plugin)
+        .add_plugins(game::game_plugin)
         .run();
 }
 
