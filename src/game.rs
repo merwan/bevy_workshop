@@ -2,7 +2,11 @@ use crate::GameState;
 use bevy::prelude::*;
 
 pub fn game_plugin(app: &mut App) {
-    app.add_systems(OnEnter(GameState::Game), display_level);
+    app.add_systems(OnEnter(GameState::Game), display_level)
+        .add_systems(
+            FixedUpdate,
+            control_player.run_if(in_state(GameState::Game)),
+        );
 }
 
 #[derive(Component)]
@@ -24,4 +28,23 @@ fn display_level(mut commands: Commands) {
         Asteroid,
         StateScoped(GameState::Game),
     ));
+}
+
+fn control_player(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut player: Query<&mut Transform, With<Player>>,
+    time: Res<Time>,
+) -> Result {
+    let mut player_transform = player.single_mut()?;
+
+    let fixed_rotation_rate = 0.2;
+    let rotation_rate = fixed_rotation_rate * 60.0 * time.delta_secs();
+
+    if keyboard_input.pressed(KeyCode::KeyA) {
+        player_transform.rotate_z(rotation_rate);
+    }
+    if keyboard_input.pressed(KeyCode::KeyD) {
+        player_transform.rotate_z(-rotation_rate);
+    }
+    Ok(())
 }
