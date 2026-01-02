@@ -32,4 +32,5 @@ enum GameState {
 #[derive(Resource)]
 struct GameAssets {
     player_ship: Handle<Image>,
+    asteroid: Handle<Image>,
 }

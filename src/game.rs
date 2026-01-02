@@ -23,7 +23,7 @@ fn display_level(mut commands: Commands, game_assets: Res<GameAssets>) {
     ));
 
     commands.spawn((
-        Sprite::from_color(Color::linear_rgb(0.0, 0.0, 1.0), Vec2::new(100.0, 100.0)),
+        Sprite::from_image(game_assets.asteroid.clone()),
         Transform::from_xyz(300.0, -200.0, 0.0),
         Asteroid,
         StateScoped(GameState::Game),
