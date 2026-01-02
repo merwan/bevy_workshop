@@ -1,5 +1,6 @@
-use crate::{GameAssets, GameState};
 use bevy::prelude::*;
+
+use crate::{GameAssets, GameState};
 
 pub fn game_plugin(app: &mut App) {
     app.add_systems(OnEnter(GameState::Game), display_level)
@@ -20,6 +21,11 @@ fn display_level(mut commands: Commands, game_assets: Res<GameAssets>) {
         Sprite::from_image(game_assets.player_ship.clone()),
         Player,
         StateScoped(GameState::Game),
+        children![(
+            Sprite::from_image(game_assets.player_engine.clone()),
+            Transform::from_xyz(0.0, -40.0, 0.0),
+            Visibility::Hidden,
+        )],
     ));
 
     commands.spawn((
@@ -32,10 +38,11 @@ fn display_level(mut commands: Commands, game_assets: Res<GameAssets>) {
 
 fn control_player(
     keyboard_input: Res<ButtonInput<KeyCode>>,
-    mut player: Query<&mut Transform, With<Player>>,
+    player: Single<(&mut Transform, &Children), With<Player>>,
+    mut visibility: Query<&mut Visibility>,
     time: Res<Time>,
 ) -> Result {
-    let mut player_transform = player.single_mut()?;
+    let (mut player_transform, children) = player.into_inner();
 
     let fixed_rotation_rate = 0.2;
     let rotation_rate = fixed_rotation_rate * 60.0 * time.delta_secs();
@@ -45,6 +52,15 @@ fn control_player(
     }
     if keyboard_input.pressed(KeyCode::KeyD) {
         player_transform.rotate_z(-rotation_rate);
+    }
+    if keyboard_input.pressed(KeyCode::KeyW) {
+        visibility
+            .get_mut(children[0])?
+            .set_if_neq(Visibility::Visible);
+    } else {
+        visibility
+            .get_mut(children[0])?
+            .set_if_neq(Visibility::Hidden);
     }
     Ok(())
 }

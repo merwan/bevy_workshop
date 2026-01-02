@@ -59,6 +59,7 @@ fn switch_to_menu(
 fn load_assets(mut commands: Commands, assert_server: Res<AssetServer>) {
     commands.insert_resource(GameAssets {
         player_ship: assert_server.load("playerShip1_green.png"),
+        player_engine: assert_server.load("fire07.png"),
         asteroid: assert_server.load("meteorBrown_big1.png"),
     });
 }
